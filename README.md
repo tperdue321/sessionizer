@@ -18,15 +18,19 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 
 ## Application setup
 
+### Prerequisites
+- Postgres installed (e.g. `brew install postgresql@15`)
+
+### Instructions
 ```bash
 # clone the repo
 git clone git@github.com:minnestar/sessionizer.git
 cd sessionizer
 
+# RUBY & GEMS
+
 # install correct ruby version
-asdf install ruby # OR
-rbenv install # OR
-rvm install
+asdf install ruby # OR rbenv install # OR rvm install
 
 # install bundler
 gem install bundler
@@ -34,10 +38,10 @@ gem install bundler
 # install ruby gems
 bundle install
 
+# NODE & PACKAGES
+
 # install node (needed for admin panel)
-asdf install nodejs # OR
-nodenv install # OR
-nvm install
+asdf install nodejs # OR nodenv install # OR nvm install
 
 # install npm packages
 npm install
