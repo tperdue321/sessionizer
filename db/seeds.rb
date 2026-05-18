@@ -26,7 +26,16 @@ Category.find_or_create_defaults
 
 # For development, create an event (default categories are auto-created via after_create callback)
 if Rails.env.development?
-  Event.first || Event.create!(name: 'Minnebar Dev', date: 30.days.from_now, venue: 'Best Buy HQ')
+  unless Event.first
+    event_date = 30.days.from_now.to_date
+    Event.create!(
+      name: "Minnebar Dev",
+      date: event_date,
+      start_time: event_date.in_time_zone.change(hour: 8, min: 30),
+      end_time: event_date.in_time_zone.change(hour: 18, min: 30),
+      venue: "Best Buy HQ"
+    )
+  end
 end
 
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

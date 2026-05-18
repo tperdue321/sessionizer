@@ -3,7 +3,7 @@ class Settings < ActiveRecord::Base
   validate :validate_default_rooms
 
   def self.instance
-    self.find_or_create_by id: 1
+    find_by(id: 1) || create!(id: 1, show_schedule: false, current_event_id: Event.current_event&.id)
   end
 
   def self.show_schedule?

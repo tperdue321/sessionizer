@@ -41,12 +41,12 @@ ActiveAdmin.register_page "Dashboard" do
               settings.show_schedule
             end
             row "Default Timeslots" do
-              "#{settings.default_timeslots.size} slots"
+              "#{settings.default_timeslots&.size || 0} slots"
             end
             row "Default Rooms" do
               rooms = Settings.default_rooms
               active_count = rooms.count { |r| r["active"] != false }
-              "#{rooms.size} rooms (#{active_count} active)"
+              "#{rooms&.size || 0} rooms (#{active_count} active)"
             end
           end
         end
