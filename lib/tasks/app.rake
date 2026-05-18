@@ -492,53 +492,59 @@ namespace :app do
     Category.find_or_create_defaults
 
     puts 'Creating event...'
-    event = Event.create(name: FFaker::HipsterIpsum.words(3).join(' '), date: 1.month.from_now)
+    event_date = 1.month.from_now.to_date
+    event = Event.create!(
+      name: FFaker::HipsterIpsum.words(3).join(' '),
+      date: event_date,
+      start_time: event_date.in_time_zone.change(hour: 8),
+      end_time: event_date.in_time_zone.change(hour: 19)
+    )
 
     puts 'Linking categories to event...'
     Category.create_defaults_for_event(event)
 
     puts 'Creating timeslots...'
-    Rake::Task['app:create_timeslots'].invoke
+    event.create_default_timeslots
 
     puts 'Creating rooms...'
-    Rake::Task['app:create_rooms'].invoke
+    event.create_default_rooms(force: true)
 
     puts 'Creating 100 participants...'
-    progress = ProgressBar.create(title: 'Participants', total: 1000)
-    100.times do 
+    progress = ProgressBar.create(title: 'Participants', total: 100)
+    100.times do
       participant = Participant.new
       participant.name = FFaker::Name.name
       participant.email = FFaker::Internet.safe_email
-      participant.password = 'standard'
+      participant.password = 'password'
       participant.bio = FFaker::Lorem.paragraph if [true, false].sample
       participant.save!
       progress.increment
     end
 
     puts 'Creating sessions...'
-    sessions_total = Room.count * Timeslot.count
-    sessions_total.times do 
+    sessions_total = [Room.count * Timeslot.count, 50].min
+    participant_ids = Participant.pluck(:id)
+    category_ids = event.categories.pluck(:id)
+    level_ids = Level.pluck(:id)
+    room_capacities = Room.pluck(:capacity)
+    sessions_total.times do
       session = Session.new
       session.title = FFaker::HipsterIpsum.phrase
       session.description = FFaker::HipsterIpsum.paragraph
-      session.participant = Participant.order('RANDOM()').first 
+      session.participant_id = participant_ids.sample
       session.event = event
-      session.categories << Category.order('RANDOM()').first
+      session.category_ids = [category_ids.sample]
+      session.level_id = level_ids.sample
       session.save!
 
-      high = Room.order('RANDOM()').first.capacity
-      interest = (0..high).to_a.sample
+      high = room_capacities.sample
+      interest = rand(0..high)
 
       puts session.title
-      participant_progress = ProgressBar.create(title: "  Interest: #{interest}", total: interest) 
-      interest.times do 
-        p = Participant.order('RANDOM()').first 
-        unless session.participants.include?(p)
-          a = Attendance.new
-          a.session = session
-          a.participant = p
-          a.save!
-        end
+      participant_progress = ProgressBar.create(title: "  Interest: #{interest}", total: interest)
+      attendee_ids = (participant_ids - [session.participant_id]).sample(interest)
+      attendee_ids.each do |pid|
+        Attendance.create!(session: session, participant_id: pid)
         participant_progress.increment
       end
     end
