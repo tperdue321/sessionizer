@@ -230,7 +230,7 @@ ActiveAdmin.register Event do
             settings.show_schedule
           end
           row "Default Timeslots" do
-            "#{settings.default_timeslots&.size || 0} slots"
+            "#{Settings.default_timeslots&.size || 0} slots"
           end
           row "Default Rooms" do
             rooms = Settings.default_rooms
