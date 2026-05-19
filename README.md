@@ -2,7 +2,7 @@
 
 Sessionizer is a tool for managing session registration for unconferences. It was written for [Minnebar](http://minnestar.org/minnebar/), an unconference in Minnesota and one of the largest BarCamps in the world.
 
-[![Scrutinizer](http://img.shields.io/scrutinizer/g/minnestar/sessionizer.svg)](https://scrutinizer-ci.com/g/minnestar/sessionizer/)
+[![CI](https://github.com/minnestar/sessionizer/actions/workflows/ci.yml/badge.svg)](https://github.com/minnestar/sessionizer/actions/workflows/ci.yml)
 
 ## Features
 
