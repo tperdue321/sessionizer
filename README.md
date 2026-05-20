@@ -19,7 +19,7 @@ Sessionizer is a tool for managing session registration for unconferences. It wa
 ## Application setup
 
 ### Prerequisites
-- Postgres installed (e.g. `brew install postgresql@15`)
+- Postgres installed & running (e.g. `brew install postgresql@16`)
 
 ### Instructions
 ```bash
