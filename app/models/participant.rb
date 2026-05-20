@@ -82,12 +82,7 @@ class Participant < ActiveRecord::Base
   end
 
   def signed_code_of_conduct_for_current_event?
-    return false unless Event.current_event
-
-    CodeOfConductAgreement.where({
-      participant_id: id,
-      event_id: Event.current_event.id,
-    }).exists?
+    coc_agreed_at != nil
   end
 
   def attending_session?(session)
