@@ -82,7 +82,7 @@ class Participant < ActiveRecord::Base
   end
 
   def signed_code_of_conduct_for_current_event?
-    coc_agreed_at != nil
+    coc_agreed_at.present?
   end
 
   def attending_session?(session)

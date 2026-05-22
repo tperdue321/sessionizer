@@ -95,7 +95,6 @@ class ParticipantsController < ApplicationController
 
   def coc_agreement_param_as_timestamp
     if params[:participant][:code_of_conduct_agreement] == '1'
-      params[:participant] ||= {}
       params[:participant][:coc_agreed_at] = Time.current
     end
   end
