@@ -5,7 +5,6 @@ class Participant < ActiveRecord::Base
   has_many :presentations
   has_many :sessions_presenting, :through => :presentations, :source => :session
   has_many :presenter_timeslot_restrictions, dependent: :destroy
-  has_many :code_of_conduct_agreements, dependent: :destroy
 
   validates :name, presence: true
   validates :email, presence: true

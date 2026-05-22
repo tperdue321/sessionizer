@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_20_012517) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_21_194947) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -53,15 +53,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_20_012517) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["category_id", "session_id"], name: "index_categorizations_on_category_id_and_session_id", unique: true
-  end
-
-  create_table "code_of_conduct_agreements", force: :cascade do |t|
-    t.bigint "participant_id", null: false
-    t.bigint "event_id", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["event_id"], name: "index_code_of_conduct_agreements_on_event_id"
-    t.index ["participant_id"], name: "index_code_of_conduct_agreements_on_participant_id"
   end
 
   create_table "event_categories", force: :cascade do |t|
