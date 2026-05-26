@@ -81,7 +81,7 @@ class Participant < ActiveRecord::Base
     Notifier.password_reset_instructions(self).deliver_now!
   end
 
-  def signed_code_of_conduct_for_current_event?
+  def signed_code_of_conduct?
     coc_agreed_at.present?
   end
 
