@@ -1,7 +1,5 @@
-namespace :backfill do
-
-  desc 'backfill coc_agreed_at for participants who have already accepted'
-  task coc_agreed_at: :environment do
+class BackfillCocAgreedAt < ActiveRecord::Migration[7.2]
+  def up
     ActiveRecord::Base.connection.execute(<<~SQL)
       UPDATE participants
       SET coc_agreed_at = coc.created_at
@@ -12,5 +10,9 @@ namespace :backfill do
       WHERE participants.id = coc.participant_id
       AND participants.coc_agreed_at IS NULL
     SQL
+  end
+
+  def down
+    Participant.update_all(coc_agreed_at: nil)
   end
 end
