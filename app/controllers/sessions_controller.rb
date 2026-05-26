@@ -78,7 +78,7 @@ class SessionsController < ApplicationController
   end
 
   def create_code_of_conduct_agreement_if_not_exists!
-    if session_params[:code_of_conduct_agreement] == '1' && !@session.participant.signed_code_of_conduct?
+    if session_params[:code_of_conduct_agreement] == '1' && !current_participant.signed_code_of_conduct?
       current_participant.update!(coc_agreed_at: Time.current)
     end
   end
