@@ -31,6 +31,16 @@ describe SessionsController do
           expect(response).to redirect_to session
           expect(assigns[:session].title).to eq 'new title'
         end
+
+        it "should sign code of conduct if param is present" do
+          patch :update, params: { id: session, session: { title: 'new title', code_of_conduct_agreement: '1' } }
+          expect(user.reload.coc_agreed_at).not_to be_nil
+        end
+
+        it "should not sign code of conduct if param is not present" do
+          patch :update, params: { id: session, session: { title: 'new title' } }
+          expect(user.reload.coc_agreed_at).to be_nil
+        end
       end
     end
 

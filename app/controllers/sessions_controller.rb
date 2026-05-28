@@ -26,7 +26,8 @@ class SessionsController < ApplicationController
   end
 
   def update
-    @session.update(session_params)
+    @session.update(session_params.except(:code_of_conduct_agreement))
+    record_code_of_conduct_agreement!
     respond_with(@session)
   end
 
@@ -69,7 +70,7 @@ class SessionsController < ApplicationController
     @session.event = Event.current_event
 
     if @session.save
-      create_code_of_conduct_agreement_if_not_exists!
+      record_code_of_conduct_agreement!
       flash[:notice] = "Thanks for adding your session."
       redirect_to @session
     else
@@ -77,7 +78,7 @@ class SessionsController < ApplicationController
     end
   end
 
-  def create_code_of_conduct_agreement_if_not_exists!
+  def record_code_of_conduct_agreement!
     if session_params[:code_of_conduct_agreement] == '1' && !current_participant.signed_code_of_conduct?
       current_participant.update!(coc_agreed_at: Time.current)
     end
