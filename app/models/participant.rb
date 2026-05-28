@@ -29,7 +29,7 @@ class Participant < ActiveRecord::Base
   scope :with_sessions, -> { joins(:sessions) }
 
   def self.ransackable_attributes(auth_object = nil)
-    ["name", "email", "bio", "email_confirmed_at"]
+    ["name", "email", "bio", "email_confirmed_at", "coc_agreed_at"]
   end
 
   def self.ransackable_associations(auth_object = nil)

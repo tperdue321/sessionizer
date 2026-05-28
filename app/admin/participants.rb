@@ -27,6 +27,10 @@ ActiveAdmin.register Participant do
          label: 'Email confirmed',
          filters: [:eq],
          input_html: { name: 'q[email_confirmed_at_not_null]' }
+  filter :coc_agreed_at_not_null, as: :boolean,
+         label: 'CoC accepted',
+         filters: [:eq],
+         input_html: { name: 'q[coc_agreed_at_not_null]' }
 
   index do
     column :name do |participant|
@@ -34,6 +38,7 @@ ActiveAdmin.register Participant do
     end
     column :email
     column(:confirmed, &:email_confirmed?)
+    column("CoC", sortable: :coc_agreed_at, &:signed_code_of_conduct?)
     column("Sessions", sortable: :presentations_count, &:presentations_count)
     column("Votes", sortable: :attendances_count, &:attendances_count)
     column(:created, sortable: :created_at) { |p| p.created_at.strftime("%-m/%-d/%y") }
@@ -52,6 +57,10 @@ ActiveAdmin.register Participant do
         status_tag p.email_confirmed? ? "Yes" : "No", class: p.email_confirmed? ? :ok : :error
       end
       row :email_confirmed_at
+      row("COC Agreed") do |p|
+        status_tag p.signed_code_of_conduct? ? "Yes" : "No", class: p.signed_code_of_conduct? ? :ok : :error
+      end
+      row :coc_agreed_at
       row :created_at
     end
 
