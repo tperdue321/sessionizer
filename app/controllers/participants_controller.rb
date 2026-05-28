@@ -4,7 +4,6 @@ class ParticipantsController < ApplicationController
   respond_to :html
   load_resource except: :confirm_email
   before_action :verify_owner, :only => [:edit, :update]
-  before_action :coc_agreement_param_as_timestamp, only: [:create, :update]
 
   def index
     respond_to do |format|
@@ -41,6 +40,7 @@ class ParticipantsController < ApplicationController
     end
 
     if @participant.update(new_params)
+      record_code_of_conduct_agreement!
       flash[:notice] = "Profile updated successfully."
       redirect_to participant_path(@participant)
     else
@@ -52,6 +52,7 @@ class ParticipantsController < ApplicationController
   def create
     @participant.attributes = participant_params.except(:code_of_conduct_agreement)
     if @participant.save
+      record_code_of_conduct_agreement!
       @participant.deliver_email_confirmation_instructions!
       flash[:notice] = "Thanks for registering an account. Please check your email to confirm your account."
       redirect_to root_path
@@ -85,7 +86,7 @@ class ParticipantsController < ApplicationController
       :name, :email, :password,
       :bio,
       :code_of_conduct_agreement,
-      :contact_details, :coc_agreed_at
+      :contact_details
     )
   end
 
@@ -93,9 +94,9 @@ class ParticipantsController < ApplicationController
     redirect_to participant_path(@participant) if @participant != current_participant
   end
 
-  def coc_agreement_param_as_timestamp
-    if params[:participant][:code_of_conduct_agreement] == '1'
-      params[:participant][:coc_agreed_at] = Time.current
+  def record_code_of_conduct_agreement!
+    if participant_params[:code_of_conduct_agreement] == '1' && !@participant.signed_code_of_conduct?
+      @participant.update!(coc_agreed_at: Time.current)
     end
   end
 end
