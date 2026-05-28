@@ -26,8 +26,9 @@ class SessionsController < ApplicationController
   end
 
   def update
-    @session.update(session_params.except(:code_of_conduct_agreement))
-    record_code_of_conduct_agreement!
+    if @session.update(session_params.except(:code_of_conduct_agreement))
+      record_code_of_conduct_agreement!
+    end
     respond_with(@session)
   end
 

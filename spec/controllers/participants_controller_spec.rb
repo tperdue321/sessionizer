@@ -156,13 +156,28 @@ describe ParticipantsController do
         expect(response).to redirect_to participant_path(joe)
         expect(joe.reload.name).to eq 'schmoe, joe'
       end
+
       it "does not set coc_agreed_at on the participant when the user has not signed the code of conduct" do
         put :update, params:  { id: joe,  participant:  { name: 'Alan Turing', code_of_conduct_agreement: '0' } }
         expect(joe.reload.coc_agreed_at).to be_nil
       end
+
       it "sets coc_agreed_at on the participant when the user has signed the code of conduct" do
         put :update, params:  { id: joe,  participant:  { code_of_conduct_agreement: '1' } }
         expect(joe.reload.coc_agreed_at).not_to be_nil
+      end
+
+      it "does not overwrite coc_agreed_at when the participant has already signed" do
+        original_time = 1.year.ago
+        joe.update!(coc_agreed_at: original_time)
+        put :update, params: { id: joe, participant: { code_of_conduct_agreement: '1' } }
+        expect(joe.reload.coc_agreed_at).to be_within(1.second).of(original_time)
+      end
+
+      it "ignores a coc_agreed_at value submitted directly in params" do
+        forged_time = 10.years.ago
+        put :update, params: { id: joe, participant: { coc_agreed_at: forged_time } }
+        expect(joe.reload.coc_agreed_at).to be_nil
       end
 
       describe "more attributes are not required" do
