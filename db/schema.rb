@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_22_192507) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_26_173525) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -114,6 +114,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_22_192507) do
     t.datetime "email_confirmed_at", precision: nil
     t.integer "presentations_count", default: 0
     t.integer "attendances_count", default: 0
+    t.datetime "coc_agreed_at"
     t.index ["email"], name: "index_participants_on_email", unique: true
     t.index ["perishable_token"], name: "index_participants_on_perishable_token"
   end

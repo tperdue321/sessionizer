@@ -81,13 +81,8 @@ class Participant < ActiveRecord::Base
     Notifier.password_reset_instructions(self).deliver_now!
   end
 
-  def signed_code_of_conduct_for_current_event?
-    return false unless Event.current_event
-
-    CodeOfConductAgreement.where({
-      participant_id: id,
-      event_id: Event.current_event.id,
-    }).exists?
+  def signed_code_of_conduct?
+    coc_agreed_at.present?
   end
 
   def attending_session?(session)
