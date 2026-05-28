@@ -57,10 +57,10 @@ ActiveAdmin.register Participant do
         status_tag p.email_confirmed? ? "Yes" : "No", class: p.email_confirmed? ? :ok : :error
       end
       row :email_confirmed_at
-      row("COC Agreed") do |p|
+      row("Agreed to CoC") do |p|
         status_tag p.signed_code_of_conduct? ? "Yes" : "No", class: p.signed_code_of_conduct? ? :ok : :error
       end
-      row :coc_agreed_at
+      row("Agreed to CoC At", &:coc_agreed_at)
       row :created_at
     end
 
